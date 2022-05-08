@@ -17,6 +17,7 @@ public class StreamDebuggerExample {
         for (int i = 2; i <= value; i++) {
             while (value % i == 0) {
                 facList.add(value);
+                facList.add(i);
                 value /= i;
             }
         }
