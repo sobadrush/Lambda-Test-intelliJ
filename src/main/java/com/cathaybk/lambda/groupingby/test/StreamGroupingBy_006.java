@@ -35,7 +35,6 @@ public class StreamGroupingBy_006 {
                 .collect(Collectors.groupingBy(Employee::getCity,
                         Collectors.mapping(Employee::getName, Collectors.toSet())));
         System.out.println("empGroup = " + empGroup);
-
     }
 
 
