@@ -1,8 +1,9 @@
 package com.cathaybk.lambda.groupingby.test;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,13 +32,25 @@ public class StreamGroupingBy_001 {
     }
 
     public static void main(String[] args) {
-        System.out.println("EMP_LIST = " + EMP_LIST);
-        Map<String, List<Employee>> empGroup =
-                EMP_LIST.parallelStream()
-                        .collect(Collectors.groupingBy(Employee::getCity));
-        System.out.println("empGroup = " + empGroup);
-        System.out.println("================================");
-        System.out.println("empGroup.get('Singapore') = " + empGroup.get("Singapore"));
+        // System.out.println("EMP_LIST = " + EMP_LIST);
+        // Map<String, List<Employee>> empGroup =
+        //         EMP_LIST.parallelStream()
+        //                 .collect(Collectors.groupingBy(Employee::getCity));
+        // System.out.println("empGroup = " + empGroup);
+        // System.out.println("================================");
+        // System.out.println("empGroup.get('Singapore') = " + empGroup.get("Singapore"));
+
+        LinkedHashMap<String, Set<Employee>> collect = EMP_LIST.stream().collect(
+                Collectors.groupingBy(
+                        Employee::getCity,
+                        new Supplier<LinkedHashMap<String, Set<Employee>>>() {
+                            @Override
+                            public LinkedHashMap<String, Set<Employee>> get() {
+                                return new LinkedHashMap<>();
+                            }
+                        },
+                        Collectors.toSet()));
+        System.out.println("collect = " + collect);
     }
 
 }
