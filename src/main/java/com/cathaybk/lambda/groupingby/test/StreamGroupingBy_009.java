@@ -4,7 +4,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,14 +64,18 @@ public class StreamGroupingBy_009 {
         List<Txn> txnList
                 = Stream.of(txn1, txn2, txn3, txn4, txn5).toList();
 
-        Map<String, BigDecimal> result = txnList.stream()
-                .collect(Collectors.groupingBy(Txn::getCity))
-                .entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, xx -> {
-                    return xx.getValue().stream()
-                            .map(txn -> txn.money)
-                            .reduce(BigDecimal.ZERO, BigDecimal::add);
-                }));
-        System.out.println("result = " + result);
+        // Map<String, BigDecimal> result = txnList.stream()
+        //         .collect(Collectors.groupingBy(Txn::getCity))
+        //         .entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, xx -> {
+        //             return xx.getValue().stream()
+        //                     .map(txn -> txn.money)
+        //                     .reduce(BigDecimal.ZERO, BigDecimal::add);
+        //         }));
+        // System.out.println("result = " + result);
+
+        txnList.parallelStream().collect(
+                Collectors.groupingBy(Txn::getCity,
+                        Collectors.reducing(BigDecimal.ZERO, (x) -> x.money, (x1, x2) -> x1.add(x2))));
     }
 
 }
